@@ -46,6 +46,11 @@ public class Main{
 
 
     private static void startNewGame() {
+        Game game = new Game(sizeX, sizeY, amountOfEnemies, transistorsNeeded,
+                moves);
+
+        game.fillFieldWithEmptyObjects();
+        game.startGame();
     }
 
     private static void showCredits() {
