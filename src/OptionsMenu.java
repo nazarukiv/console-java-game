@@ -15,8 +15,8 @@ public class OptionsMenu {
                 case 1:
                     System.out.println("__________________________________________________________\n" +
                             "\n Current settings:\n"+
-                            "rows: " + Main.rows+"\n"+
-                            "columns: " + Main.columns+"\n"+
+                            "rows: " + Main.sizeX+"\n"+
+                            "columns: " + Main.sizeY+"\n"+
                             "enemies: " + Main.amountOfEnemies+"\n"+
                             "transistors: " + Main.transistorsNeeded+"\n"+
                             "moves: " + Main.moves+"\n"+
@@ -24,9 +24,9 @@ public class OptionsMenu {
                     break;
                 case 2:
                     System.out.println("Enter a new value for rows: ");
-                    Main.rows = scanner.nextInt();
+                    Main.sizeX = scanner.nextInt();
                     System.out.println("Enter a new value for columns: ");
-                    Main.columns = scanner.nextInt();
+                    Main.sizeY = scanner.nextInt();
                     System.out.println("Enter a new value for enemies: ");
                     Main.amountOfEnemies = scanner.nextInt();
                     System.out.println("Enter a new value for transistors: ");
