@@ -1,20 +1,28 @@
+import java.util.ArrayList;
+import java.util.Random;
+
 public class Game {
      private int sizeX;
      private int sizeY;
      private int amountOfEnemies;
      private int transistorsNeeded;
+     private int transistorsGathered;
      private int movesLeft;
      private int flowersGathered;
      private Field field;
      private boolean isGameFinished = false;
+     private int amountOfFlowers;
+     private ArrayList<Flower> flowerArrayList = new ArrayList<Flower>();
+     private Random randomNumber = new Random();
 
 
-     public Game(int sizeX, int sizeY, int amountOfEnemies, int transistorsNeeded, int movesLeft) {
+     public Game(int sizeX, int sizeY, int amountOfEnemies, int transistorsNeeded, int movesLeft, int amountOfFlowers) {
         this.sizeX = sizeX;
         this.sizeY = sizeY;
         this.amountOfEnemies = amountOfEnemies;
         this.transistorsNeeded = transistorsNeeded;
         this.movesLeft = movesLeft;
+        this.amountOfFlowers = amountOfFlowers;
         field = new Field(sizeX, sizeY);
     }
 
@@ -40,6 +48,7 @@ public class Game {
     }
 
     private void placeFlowers() {
+        generateFlowers();
     }
 
     private void placeEnemies() {
@@ -49,15 +58,49 @@ public class Game {
     }
 
     private void checkIfGameNotFinished() {
+        isGameFinished = true;
     }
 
     private void computerTurn() {
+        System.out.println("Computer turn");
     }
 
     private void playerTurn() {
+        System.out.println("Player turn");
     }
 
+    private void generateFlowers(){
+        for (int i=amountOfFlowers-flowerArrayList.size(); i > 0;){
+            int flowerAmountOfTransistors = randomNumber.nextInt( 9)+1 ;
+            int flowerRowPosition = randomNumber.nextInt(sizeX);
+            int flowerColumnPosition =  randomNumber.nextInt(sizeY);
+
+            if (field.getFieldable(flowerRowPosition, flowerColumnPosition)
+                    instanceof Player){
+                transistorsGathered = transistorsGathered + flowerAmountOfTransistors;
+                i--;
+            }
+
+            else  if (field.getFieldable(flowerRowPosition, flowerColumnPosition)
+                    instanceof Empty){
+                Flower flower =  new Flower(flowerAmountOfTransistors);
+                field.setFieldable(flowerRowPosition, flowerColumnPosition, flower);
+                flowerArrayList.add(flower);
+                i--;
+
+            }
+//                else  if(field.getFieldable(flowerRowPosition, flowerColumnPosition)
+//                        instanceof Enemy ||field.getFieldable(flowerRowPosition, flowerColumnPosition)
+//                        instanceof Flower){
+//
+//                }
+        }
+    }
+
+
     private void showField() {
+        System.out.println("=== FIELD ===");
+        field.showField();
     }
 
 }

@@ -20,6 +20,7 @@ public class OptionsMenu {
                             "enemies: " + Main.amountOfEnemies+"\n"+
                             "transistors: " + Main.transistorsNeeded+"\n"+
                             "moves: " + Main.moves+"\n"+
+                            "flowers: " + Main.amountOfFlowers+"\n"+
                             "__________________________________________________________\n");
                     break;
                 case 2:
@@ -33,6 +34,8 @@ public class OptionsMenu {
                     Main.transistorsNeeded= scanner.nextInt();
                     System.out.println("Enter a new value for moves: ");
                     Main.moves = scanner.nextInt();
+                    System.out.println("Enter a new value for flowers: ");
+                    Main.amountOfFlowers = scanner.nextInt();
                     break;
                 case 3:
                     break;

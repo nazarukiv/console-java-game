@@ -7,6 +7,7 @@ public class Main{
     public static int amountOfEnemies = 10;
     public static int transistorsNeeded = 100;
     public static int moves = 40;
+    public static int amountOfFlowers = 10;
 
     public static void main(String[] args){
 
@@ -47,7 +48,7 @@ public class Main{
 
     private static void startNewGame() {
         Game game = new Game(sizeX, sizeY, amountOfEnemies, transistorsNeeded,
-                moves);
+                moves, amountOfFlowers);
 
         game.fillFieldWithEmptyObjects();
         game.startGame();
