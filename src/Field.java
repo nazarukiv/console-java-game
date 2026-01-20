@@ -11,12 +11,12 @@ public class Field {
     }
 
     //getters
-    public int getSizeY() {
-        return sizeY;
+    public int getRows() {
+        return sizeX;
     }
 
-    public int getSizeX() {
-        return sizeX;
+    public int getColumns() {
+        return sizeY;
     }
 
     //no setters(sizeX, sizeY) as when field is created, it's not possible to change it.

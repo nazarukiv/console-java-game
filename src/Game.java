@@ -83,7 +83,7 @@ public class Game {
 
             else  if (field.getFieldable(flowerRowPosition, flowerColumnPosition)
                     instanceof Empty){
-                Flower flower =  new Flower(flowerAmountOfTransistors);
+                Flower flower =  new Flower(flowerAmountOfTransistors, flowerRowPosition, flowerColumnPosition);
                 field.setFieldable(flowerRowPosition, flowerColumnPosition, flower);
                 flowerArrayList.add(flower);
                 i--;
@@ -95,6 +95,18 @@ public class Game {
 //
 //                }
         }
+    }
+
+    public Field getField(){
+         return this.field;
+    }
+
+    public ArrayList<Flower> getFlowerArrayList(){
+         return this.flowerArrayList;
+    }
+
+    public void setTransistorsGathered(int transistorsToAdd){
+         this.transistorsGathered += transistorsToAdd;
     }
 
 

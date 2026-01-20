@@ -1,5 +1,3 @@
-import java.lang.reflect.Field;
-
 public class Player implements Fieldable{
 
     //commands for moves
@@ -14,16 +12,18 @@ public class Player implements Fieldable{
     private int rowIndex;
     private int columnIndex;
     private Field field;
+    private Game game;
 
     @Override
     public String getSymbol() {
         return " @ ";
     }
 
-    public Player(int rowIndex, int columnIndex, Field field){
+    public Player(int rowIndex, int columnIndex, Field field, Game game){
         this.rowIndex = rowIndex;
         this.columnIndex = columnIndex;
-        this.field = field;
+        this.game = game;
+        this.field =game.getField();
     }
 
 
@@ -54,7 +54,31 @@ public class Player implements Fieldable{
     }
 
     private void movePlayer(int deltaRowIndex, int deltaColumnIndex){
+        int newRowIndex = rowIndex + deltaRowIndex;
+        int newColumnIndex = columnIndex + deltaColumnIndex;
 
+        if ((newRowIndex > 0) && (newRowIndex < field.getColumns()) &&
+                (newColumnIndex>0) && (newColumnIndex < field.getRows()) &&
+                !((field.getFieldable(newColumnIndex, newRowIndex)) instanceof Enemy)){
+            if ((field.getFieldable(newColumnIndex, newRowIndex)) instanceof Flower) {
+                Flower flower =(Flower) field.getFieldable(newColumnIndex, newRowIndex);
+                game.setTransistorsGathered(flower.getTransistors());
+                game.getFlowerArrayList().remove(flower);
+                field.setFieldable(newColumnIndex, newRowIndex, this);
+                field.setFieldable(columnIndex, rowIndex, new Empty());
+                rowIndex = newRowIndex;
+                columnIndex = newColumnIndex;
+            }
+            if ((field.getFieldable(newColumnIndex, newRowIndex)) instanceof Empty) {
+                swapPlayer(newColumnIndex, newRowIndex);
+            }
+        }
+    }
+    private void swapPlayer(int newColumnIndex, int newRowIndex){
+        field.setFieldable(newColumnIndex, newRowIndex, this);
+        field.setFieldable(columnIndex, rowIndex, new Empty());
+        rowIndex = newRowIndex;
+        columnIndex = newColumnIndex;
     }
 
     private void showError(String command){
