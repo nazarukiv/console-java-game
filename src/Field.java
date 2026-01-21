@@ -30,13 +30,13 @@ public class Field {
         return field[x][y];
     }
 
-    public void showField(){
+    public void showField() {
         System.out.println();
-        for (int i=0; i<sizeX;i++){
-            System.out.println();
-            for (int j =0; j<sizeY;j++){
-                System.out.println(field[i][j].getSymbol());
+        for (int i = 0; i < sizeX; i++) {
+            for (int j = 0; j < sizeY; j++) {
+                System.out.print(field[i][j].getSymbol());
             }
+            System.out.println();
         }
         System.out.println();
     }

@@ -24,6 +24,7 @@ public class Player implements Fieldable{
         this.columnIndex = columnIndex;
         this.game = game;
         this.field =game.getField();
+        field.setFieldable(rowIndex, columnIndex, this);
     }
 
 
@@ -53,30 +54,36 @@ public class Player implements Fieldable{
         }
     }
 
-    private void movePlayer(int deltaRowIndex, int deltaColumnIndex){
+    private void movePlayer(int deltaRowIndex, int deltaColumnIndex) {
         int newRowIndex = rowIndex + deltaRowIndex;
         int newColumnIndex = columnIndex + deltaColumnIndex;
 
-        if ((newRowIndex > 0) && (newRowIndex < field.getColumns()) &&
-                (newColumnIndex>0) && (newColumnIndex < field.getRows()) &&
-                !((field.getFieldable(newColumnIndex, newRowIndex)) instanceof Enemy)){
-            if ((field.getFieldable(newColumnIndex, newRowIndex)) instanceof Flower) {
-                Flower flower =(Flower) field.getFieldable(newColumnIndex, newRowIndex);
+        if (newRowIndex >= 0 && newRowIndex < field.getRows() &&
+                newColumnIndex >= 0 && newColumnIndex < field.getColumns()) {
+
+            Fieldable target = field.getFieldable(newRowIndex, newColumnIndex);
+
+            if (target instanceof Enemy) {
+                return;
+            }
+
+            if (target instanceof Flower) {
+                Flower flower = (Flower) target;
                 game.setTransistorsGathered(flower.getTransistors());
                 game.getFlowerArrayList().remove(flower);
-                field.setFieldable(newColumnIndex, newRowIndex, this);
-                field.setFieldable(columnIndex, rowIndex, new Empty());
-                rowIndex = newRowIndex;
-                columnIndex = newColumnIndex;
             }
-            if ((field.getFieldable(newColumnIndex, newRowIndex)) instanceof Empty) {
-                swapPlayer(newColumnIndex, newRowIndex);
-            }
+
+            field.setFieldable(rowIndex, columnIndex, new Empty());
+            field.setFieldable(newRowIndex, newColumnIndex, this);
+
+            rowIndex = newRowIndex;
+            columnIndex = newColumnIndex;
         }
     }
-    private void swapPlayer(int newColumnIndex, int newRowIndex){
-        field.setFieldable(newColumnIndex, newRowIndex, this);
-        field.setFieldable(columnIndex, rowIndex, new Empty());
+
+    private void swapPlayer(int newRowIndex, int newColumnIndex){
+        field.setFieldable(rowIndex, columnIndex, new Empty());
+        field.setFieldable(newRowIndex, newColumnIndex, this);
         rowIndex = newRowIndex;
         columnIndex = newColumnIndex;
     }

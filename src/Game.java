@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
 
 public class Game {
      private int sizeX;
@@ -14,6 +15,8 @@ public class Game {
      private int amountOfFlowers;
      private ArrayList<Flower> flowerArrayList = new ArrayList<Flower>();
      private Random randomNumber = new Random();
+     private Player player;
+     private Scanner scanner = new Scanner(System.in);
 
 
      public Game(int sizeX, int sizeY, int amountOfEnemies, int transistorsNeeded, int movesLeft, int amountOfFlowers) {
@@ -42,7 +45,7 @@ public class Game {
          while (!isGameFinished){
              showField();
              playerTurn();
-             computerTurn();
+             //computerTurn();
              checkIfGameNotFinished();
          }
     }
@@ -55,18 +58,32 @@ public class Game {
     }
 
     private void placePlayer() {
+         int playerRowPosition = randomNumber.nextInt(sizeX);
+         int playerColumnPosition = randomNumber.nextInt(sizeY);
+         player = new Player(playerRowPosition, playerColumnPosition, field, this);
     }
 
     private void checkIfGameNotFinished() {
-        isGameFinished = true;
+        if (movesLeft <= 0) {
+            isGameFinished = true;
+            System.out.println("Game over! No moves left.");
+        }
+
+        if (transistorsGathered >= transistorsNeeded) {
+            isGameFinished = true;
+            System.out.println("You win! All transistors collected!");
+        }
     }
 
     private void computerTurn() {
-        System.out.println("Computer turn");
+        movesLeft--;
     }
 
     private void playerTurn() {
-        System.out.println("Player turn");
+        System.out.print("Please enter your command and press Enter: ");
+        String command = scanner.nextLine();
+        player.makeMove(command);
+        movesLeft--;
     }
 
     private void generateFlowers(){
@@ -111,7 +128,10 @@ public class Game {
 
 
     private void showField() {
-        System.out.println("=== FIELD ===");
+        System.out.println(
+                "Turns left: " + movesLeft +
+                        ", transistors gathered: " + transistorsGathered + "/" + transistorsNeeded
+        );
         field.showField();
     }
 
