@@ -14,9 +14,12 @@ public class Game {
      private boolean isGameFinished = false;
      private int amountOfFlowers;
      private ArrayList<Flower> flowerArrayList = new ArrayList<Flower>();
+     private ArrayList<Enemy> enemyArrayList = new ArrayList<Enemy>();
      private Random randomNumber = new Random();
      private Player player;
      private Scanner scanner = new Scanner(System.in);
+     private int triesToRegenerate = 10;
+
 
 
      public Game(int sizeX, int sizeY, int amountOfEnemies, int transistorsNeeded, int movesLeft, int amountOfFlowers) {
@@ -45,7 +48,7 @@ public class Game {
          while (!isGameFinished){
              showField();
              playerTurn();
-             //computerTurn();
+             computerTurn();
              checkIfGameNotFinished();
          }
     }
@@ -55,6 +58,19 @@ public class Game {
     }
 
     private void placeEnemies() {
+        for (int i = 0; i < amountOfEnemies; i++) {
+
+            int row = randomNumber.nextInt(sizeX);
+            int col = randomNumber.nextInt(sizeY);
+
+            if (field.getFieldable(row, col) instanceof Empty) {
+                Enemy enemy = new Enemy(row, col);
+                field.setFieldable(row, col, enemy);
+                enemyArrayList.add(enemy);
+            } else {
+                i--;
+            }
+        }
     }
 
     private void placePlayer() {
@@ -76,6 +92,8 @@ public class Game {
     }
 
     private void computerTurn() {
+        enemyMove();
+        generateFlowers();
         movesLeft--;
     }
 
@@ -84,6 +102,52 @@ public class Game {
         String command = scanner.nextLine();
         player.makeMove(command);
         movesLeft--;
+    }
+
+    private void enemyMove() {
+        for (Enemy enemy : enemyArrayList) {
+
+            int oldRow = enemy.getRowIndex();
+            int oldCol = enemy.getColumnIndex();
+
+            int attempts = 0;
+
+            while (attempts < triesToRegenerate) {
+
+                int deltaRow = randomNumber.nextInt(3) - 1;
+                int deltaCol = randomNumber.nextInt(3) - 1;
+
+                int newRow = oldRow + deltaRow;
+                int newCol = oldCol + deltaCol;
+
+                if (newRow < 0 || newCol < 0 ||
+                        newRow >= field.getRows() || newCol >= field.getColumns()) {
+                    attempts++;
+                    continue;
+                }
+
+                Fieldable target = field.getFieldable(newRow, newCol);
+
+                if (target instanceof Player || target instanceof Enemy) {
+                    attempts++;
+                    continue;
+                }
+
+                if (target instanceof Flower) {
+                    flowerArrayList.remove((Flower) target);
+                }
+
+                swapEnemy(oldRow, oldCol, newRow, newCol, enemy);
+                break;
+            }
+        }
+    }
+
+    private void swapEnemy(int oldRow, int oldCol, int newRow, int newCol, Enemy enemy) {
+        field.setFieldable(oldRow, oldCol, new Empty());
+        field.setFieldable(newRow, newCol, enemy);
+        enemy.setRowIndex(newRow);
+        enemy.setColumnIndex(newCol);
     }
 
     private void generateFlowers(){
