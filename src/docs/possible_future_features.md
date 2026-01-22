@@ -1,0 +1,4 @@
+- difficulty levels.
+- improve enemy movement logic.
+- score system and save best results.
+- improve visual representation of the field in the console.

@@ -94,12 +94,11 @@ public class Game {
     private void computerTurn() {
         enemyMove();
         generateFlowers();
-        movesLeft--;
     }
 
     private void playerTurn() {
-        System.out.print("Please enter your command and press Enter: ");
-        String command = scanner.nextLine();
+        System.out.print("Move (w-> up/ a->left/ s->down/ d-right): ");
+        String command = scanner.nextLine().trim().toLowerCase();
         player.makeMove(command);
         movesLeft--;
     }
@@ -107,39 +106,30 @@ public class Game {
     private void enemyMove() {
         for (Enemy enemy : enemyArrayList) {
 
-            int oldRow = enemy.getRowIndex();
-            int oldCol = enemy.getColumnIndex();
+            int r = enemy.getRowIndex();
+            int c = enemy.getColumnIndex();
 
-            int attempts = 0;
+            int dRow = randomNumber.nextInt(3) - 1;
+            int dCol = randomNumber.nextInt(3) - 1;
 
-            while (attempts < triesToRegenerate) {
+            int newRow = r + dRow;
+            int newCol = c + dCol;
 
-                int deltaRow = randomNumber.nextInt(3) - 1;
-                int deltaCol = randomNumber.nextInt(3) - 1;
+            if (!field.isInside(newRow, newCol)) continue;
 
-                int newRow = oldRow + deltaRow;
-                int newCol = oldCol + deltaCol;
+            Fieldable target = field.getFieldable(newRow, newCol);
 
-                if (newRow < 0 || newCol < 0 ||
-                        newRow >= field.getRows() || newCol >= field.getColumns()) {
-                    attempts++;
-                    continue;
-                }
+            if (target instanceof Enemy || target instanceof Player) continue;
 
-                Fieldable target = field.getFieldable(newRow, newCol);
-
-                if (target instanceof Player || target instanceof Enemy) {
-                    attempts++;
-                    continue;
-                }
-
-                if (target instanceof Flower) {
-                    flowerArrayList.remove((Flower) target);
-                }
-
-                swapEnemy(oldRow, oldCol, newRow, newCol, enemy);
-                break;
+            if (target instanceof Flower) {
+                flowerArrayList.remove((Flower) target);
             }
+
+            field.setFieldable(r, c, new Empty());
+            field.setFieldable(newRow, newCol, enemy);
+
+            enemy.setRowIndex(newRow);
+            enemy.setColumnIndex(newCol);
         }
     }
 
@@ -150,31 +140,25 @@ public class Game {
         enemy.setColumnIndex(newCol);
     }
 
-    private void generateFlowers(){
-        for (int i=amountOfFlowers-flowerArrayList.size(); i > 0;){
-            int flowerAmountOfTransistors = randomNumber.nextInt( 9)+1 ;
-            int flowerRowPosition = randomNumber.nextInt(sizeX);
-            int flowerColumnPosition =  randomNumber.nextInt(sizeY);
+    private void generateFlowers() {
+        int needToSpawn = amountOfFlowers - flowerArrayList.size();
+        int attempts = 0;
 
-            if (field.getFieldable(flowerRowPosition, flowerColumnPosition)
-                    instanceof Player){
-                transistorsGathered = transistorsGathered + flowerAmountOfTransistors;
-                i--;
-            }
+        while (needToSpawn > 0 && attempts < 1000) {
+            attempts++;
 
-            else  if (field.getFieldable(flowerRowPosition, flowerColumnPosition)
-                    instanceof Empty){
-                Flower flower =  new Flower(flowerAmountOfTransistors, flowerRowPosition, flowerColumnPosition);
-                field.setFieldable(flowerRowPosition, flowerColumnPosition, flower);
+            int t = randomNumber.nextInt(9) + 1;
+            int r = randomNumber.nextInt(sizeX);
+            int c = randomNumber.nextInt(sizeY);
+
+            Fieldable cell = field.getFieldable(r, c);
+
+            if (cell instanceof Empty) {
+                Flower flower = new Flower(t, r, c);
+                field.setFieldable(r, c, flower);
                 flowerArrayList.add(flower);
-                i--;
-
+                needToSpawn--;
             }
-//                else  if(field.getFieldable(flowerRowPosition, flowerColumnPosition)
-//                        instanceof Enemy ||field.getFieldable(flowerRowPosition, flowerColumnPosition)
-//                        instanceof Flower){
-//
-//                }
         }
     }
 

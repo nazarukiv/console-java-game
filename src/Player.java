@@ -54,31 +54,30 @@ public class Player implements Fieldable{
         }
     }
 
-    private void movePlayer(int deltaRowIndex, int deltaColumnIndex) {
-        int newRowIndex = rowIndex + deltaRowIndex;
-        int newColumnIndex = columnIndex + deltaColumnIndex;
+    private void movePlayer(int dRow, int dCol) {
+        int newRow = rowIndex + dRow;
+        int newCol = columnIndex + dCol;
 
-        if (newRowIndex >= 0 && newRowIndex < field.getRows() &&
-                newColumnIndex >= 0 && newColumnIndex < field.getColumns()) {
+        if (!field.isInside(newRow, newCol)) return;
 
-            Fieldable target = field.getFieldable(newRowIndex, newColumnIndex);
+        Fieldable target = field.getFieldable(newRow, newCol);
 
-            if (target instanceof Enemy) {
-                return;
-            }
-
-            if (target instanceof Flower) {
-                Flower flower = (Flower) target;
-                game.setTransistorsGathered(flower.getTransistors());
-                game.getFlowerArrayList().remove(flower);
-            }
-
-            field.setFieldable(rowIndex, columnIndex, new Empty());
-            field.setFieldable(newRowIndex, newColumnIndex, this);
-
-            rowIndex = newRowIndex;
-            columnIndex = newColumnIndex;
+        if (target instanceof Enemy) {
+            System.out.println("blocked by enemy");
+            return;
         }
+
+        if (target instanceof Flower) {
+            Flower f = (Flower) target;
+            game.setTransistorsGathered(f.getTransistors());
+            game.getFlowerArrayList().remove(f);
+        }
+
+        field.setFieldable(rowIndex, columnIndex, new Empty());
+        field.setFieldable(newRow, newCol, this);
+
+        rowIndex = newRow;
+        columnIndex = newCol;
     }
 
     private void swapPlayer(int newRowIndex, int newColumnIndex){

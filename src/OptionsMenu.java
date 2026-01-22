@@ -36,6 +36,7 @@ public class OptionsMenu {
                     Main.moves = scanner.nextInt();
                     System.out.println("Enter a new value for flowers: ");
                     Main.amountOfFlowers = scanner.nextInt();
+                    scanner.nextLine();
                     break;
                 case 3:
                     break;

@@ -2,12 +2,17 @@ import java.util.Scanner;
 
 public class Main{
 
-    public static int sizeX=3;
-    public static int sizeY=4;
-    public static int amountOfEnemies = 10;
-    public static int transistorsNeeded = 100;
-    public static int moves = 40;
-    public static int amountOfFlowers = 10;
+    public static int sizeX = 10;
+    public static int sizeY = 12;
+
+
+
+    public static int amountOfEnemies = 12;
+    public static int amountOfFlowers = 18;
+
+
+    public static int transistorsNeeded = 120;
+    public static int moves = 80;
 
     public static void main(String[] args){
 

@@ -40,4 +40,8 @@ public class Field {
         }
         System.out.println();
     }
+
+    public boolean isInside(int r, int c) {
+        return r >= 0 && c >= 0 && r < sizeX && c < sizeY;
+    }
 }
